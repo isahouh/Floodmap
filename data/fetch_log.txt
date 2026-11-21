@@ -1,7 +1,2 @@
-2026-11-21T16:59:01.322199Z
-OK   rain, San Francisco downtown gauge
-  station list hpd-stations-inventory.csv failed: <HTTPError 404: 'Not Found'>
-  station list 15min/hpd-stations-inventory.csv failed: <HTTPError 404: 'Not Found'>
-  station list hpd-stations.txt failed: <HTTPError 404: 'Not Found'>
-FAIL rain, 15-minute gauges: RuntimeError('no station list')
-OK   storm drains
+2026-11-21T17:06:37.852173Z
+OK   sewer pipe network
