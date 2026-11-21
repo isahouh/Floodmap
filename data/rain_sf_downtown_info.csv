@@ -1,0 +1,249 @@
+Row Type,Variable Name,Attribute Name,Data Type,Value
+attribute,NC_GLOBAL,cdm_data_type,String,TimeSeries
+attribute,NC_GLOBAL,cdm_timeseries_variables,String,"station,longitude,latitude"
+attribute,NC_GLOBAL,contributor_role_vocabulary,String,https://vocab.nerc.ac.uk/collection/G04/current/
+attribute,NC_GLOBAL,Conventions,String,"IOOS-1.2, CF-1.6, ACDD-1.3"
+attribute,NC_GLOBAL,creator_country,String,USA
+attribute,NC_GLOBAL,creator_email,String,HDSC.questions@noaa.gov
+attribute,NC_GLOBAL,creator_institution,String,Hydrometeorological Automated Data System (HADS)
+attribute,NC_GLOBAL,creator_name,String,Hydrometeorological Automated Data System (HADS)
+attribute,NC_GLOBAL,creator_sector,String,gov_federal
+attribute,NC_GLOBAL,creator_type,String,institution
+attribute,NC_GLOBAL,creator_url,String,https://hads.ncep.noaa.gov/
+attribute,NC_GLOBAL,defaultDataQuery,String,"battery_voltage,battery_voltage_qc_agg,relative_humidity_qc_agg,air_temperature,lwe_thickness_of_precipitation_amount,z,time,relative_humidity,lwe_thickness_of_precipitation_amount_qc_agg,air_temperature_qc_agg&time>=max(time)-3days"
+attribute,NC_GLOBAL,Easternmost_Easting,double,-122.426944
+attribute,NC_GLOBAL,featureType,String,TimeSeries
+attribute,NC_GLOBAL,geospatial_lat_max,double,37.770556
+attribute,NC_GLOBAL,geospatial_lat_min,double,37.770556
+attribute,NC_GLOBAL,geospatial_lat_units,String,degrees_north
+attribute,NC_GLOBAL,geospatial_lon_max,double,-122.426944
+attribute,NC_GLOBAL,geospatial_lon_min,double,-122.426944
+attribute,NC_GLOBAL,geospatial_lon_units,String,degrees_east
+attribute,NC_GLOBAL,geospatial_vertical_max,double,0.0
+attribute,NC_GLOBAL,geospatial_vertical_min,double,0.0
+attribute,NC_GLOBAL,geospatial_vertical_positive,String,up
+attribute,NC_GLOBAL,geospatial_vertical_units,String,m
+attribute,NC_GLOBAL,history,String,Downloaded from Hydrometeorological Automated Data System (HADS)
+attribute,NC_GLOBAL,id,String,gov_noaa_nws_hads_san_francisco_
+attribute,NC_GLOBAL,infoUrl,String,https://data.cencoos.org/#metadata/130915/station
+attribute,NC_GLOBAL,institution,String,Hydrometeorological Automated Data System (HADS)
+attribute,NC_GLOBAL,keywords,String,"CF:air_temperature, CF:lwe_thickness_of_precipitation_amount, CF:relative_humidity, GCMD:Earth Science > Atmosphere > Atmospheric Temperature > Air Temperature, GCMD:Earth Science > Atmosphere > Atmospheric Temperature > Surface Air Temperature, GCMD:Earth Science > Atmosphere > Atmospheric Water Vapor > Humidity, GCMD:Earth Science > Atmosphere > Precipitation > Liquid Water Equivalent, GCMD:Earth Science > Atmosphere > Precipitation > Precipitation Amount"
+attribute,NC_GLOBAL,keywords_vocabulary,String,"GCMD:GCMD Science Keywords, CF:NetCDF COARDS Climate and Forecast Standard Names"
+attribute,NC_GLOBAL,license,String,"These data may be used and redistributed for free but they are not intended for legal use, since they may contain inaccuracies. For use for publications please reference the Central and Northern California Ocean Observing system (CeNCOOS) and NOAA. Neither the data provider, CeNCOOS, NOAA, nor the United States Government, nor any of their employees or contractors, makes any warranty, express or implied, including warranties of merchantability and fitness for a particular purpose, or assumes any legal liability for the accuracy, completeness, or usefulness, or this information."
+attribute,NC_GLOBAL,naming_authority,String,us.ioos
+attribute,NC_GLOBAL,Northernmost_Northing,double,37.770556
+attribute,NC_GLOBAL,platform,String,fixed
+attribute,NC_GLOBAL,platform_name,String,SAN FRANCISCO DOWNTOWN
+attribute,NC_GLOBAL,platform_vocabulary,String,https://mmisw.org/ont/ioos/platform
+attribute,NC_GLOBAL,processing_level,String,These data include the results of quality control tests performed by the data provider
+attribute,NC_GLOBAL,publisher_country,String,USA
+attribute,NC_GLOBAL,publisher_email,String,HDSC.questions@noaa.gov
+attribute,NC_GLOBAL,publisher_institution,String,Hydrometeorological Automated Data System (HADS)
+attribute,NC_GLOBAL,publisher_name,String,Hydrometeorological Automated Data System (HADS)
+attribute,NC_GLOBAL,publisher_sector,String,gov_federal
+attribute,NC_GLOBAL,publisher_type,String,institution
+attribute,NC_GLOBAL,publisher_url,String,https://hads.ncep.noaa.gov/
+attribute,NC_GLOBAL,references,String,"https://hads.ncep.noaa.gov/cgi-bin/hads/interactiveDisplays/displayMetaData.pl?table=dcp&nesdis_id=15C952EA,,"
+attribute,NC_GLOBAL,sourceUrl,String,https://hads.ncep.noaa.gov/cgi-bin/hads/interactiveDisplays/displayMetaData.pl?table=dcp&nesdis_id=15C952EA
+attribute,NC_GLOBAL,Southernmost_Northing,double,37.770556
+attribute,NC_GLOBAL,standard_name_vocabulary,String,CF Standard Name Table v93
+attribute,NC_GLOBAL,station_id,String,130915
+attribute,NC_GLOBAL,summary,String,Timeseries data from 'SAN FRANCISCO DOWNTOWN' (gov_noaa_nws_hads_san_francisco_)
+attribute,NC_GLOBAL,time_coverage_end,String,2026-11-21T13:43:00Z
+attribute,NC_GLOBAL,time_coverage_start,String,2015-05-05T14:43:00Z
+attribute,NC_GLOBAL,title,String,SAN FRANCISCO DOWNTOWN
+attribute,NC_GLOBAL,Westernmost_Easting,double,-122.426944
+variable,time,,double,
+attribute,time,_ChunkSizes,uint,511
+attribute,time,_CoordinateAxisType,String,Time
+attribute,time,actual_range,double,"1.43083698E9, 1.79526858E9"
+attribute,time,axis,String,T
+attribute,time,calendar,String,gregorian
+attribute,time,ioos_category,String,Time
+attribute,time,long_name,String,Time
+attribute,time,standard_name,String,time
+attribute,time,time_origin,String,01-JAN-1970 00:00:00
+attribute,time,units,String,seconds since 1970-01-01T00:00:00Z
+variable,latitude,,double,
+attribute,latitude,_CoordinateAxisType,String,Lat
+attribute,latitude,_FillValue,double,NaN
+attribute,latitude,actual_range,double,"37.770556, 37.770556"
+attribute,latitude,axis,String,Y
+attribute,latitude,ioos_category,String,Location
+attribute,latitude,long_name,String,Latitude
+attribute,latitude,standard_name,String,latitude
+attribute,latitude,units,String,degrees_north
+variable,longitude,,double,
+attribute,longitude,_CoordinateAxisType,String,Lon
+attribute,longitude,_FillValue,double,NaN
+attribute,longitude,actual_range,double,"-122.426944, -122.426944"
+attribute,longitude,axis,String,X
+attribute,longitude,ioos_category,String,Location
+attribute,longitude,long_name,String,Longitude
+attribute,longitude,standard_name,String,longitude
+attribute,longitude,units,String,degrees_east
+variable,z,,double,
+attribute,z,_ChunkSizes,uint,511
+attribute,z,_CoordinateAxisType,String,Height
+attribute,z,_CoordinateZisPositive,String,up
+attribute,z,_FillValue,double,NaN
+attribute,z,actual_range,double,"0.0, 0.0"
+attribute,z,axis,String,Z
+attribute,z,ioos_category,String,Location
+attribute,z,long_name,String,Altitude
+attribute,z,positive,String,up
+attribute,z,standard_name,String,altitude
+attribute,z,units,String,m
+variable,battery_voltage,,double,
+attribute,battery_voltage,_ChunkSizes,uint,511
+attribute,battery_voltage,_FillValue,double,-9999.0
+attribute,battery_voltage,actual_range,double,"12.02, 13.69"
+attribute,battery_voltage,ancillary_variables,String,battery_voltage_qc_agg battery_voltage_qc_tests
+attribute,battery_voltage,id,String,1111802
+attribute,battery_voltage,ioos_category,String,Unknown
+attribute,battery_voltage,long_name,String,Battery
+attribute,battery_voltage,missing_value,double,-9999.0
+attribute,battery_voltage,platform,String,station
+attribute,battery_voltage,short_name,String,battery_voltage
+attribute,battery_voltage,units,String,V
+variable,battery_voltage_qc_agg,,int,
+attribute,battery_voltage_qc_agg,_ChunkSizes,uint,4087
+attribute,battery_voltage_qc_agg,_FillValue,int,-127
+attribute,battery_voltage_qc_agg,actual_range,int,"2, 2"
+attribute,battery_voltage_qc_agg,flag_meanings,String,PASS NOT_EVALUATED SUSPECT FAIL MISSING
+attribute,battery_voltage_qc_agg,flag_values,int,"1, 2, 3, 4, 9"
+attribute,battery_voltage_qc_agg,ioos_category,String,Other
+attribute,battery_voltage_qc_agg,long_name,String,Battery QARTOD Aggregate Quality Flag
+attribute,battery_voltage_qc_agg,missing_value,int,-127
+attribute,battery_voltage_qc_agg,short_name,String,battery_voltage_qc_agg
+attribute,battery_voltage_qc_agg,standard_name,String,aggregate_quality_flag
+attribute,battery_voltage_qc_agg,standard_name_url,String,https://mmisw.org/ont/cf/parameter/aggregate_quality_flag
+variable,battery_voltage_qc_tests,,ulong,
+attribute,battery_voltage_qc_tests,_ChunkSizes,uint,511
+attribute,battery_voltage_qc_tests,_FillValue,ulong,0
+attribute,battery_voltage_qc_tests,comment,String,"11-character string with results of individual QARTOD tests. 1: Gap Test, 2: Syntax Test, 3: Location Test, 4: Gross Range Test, 5: Climatology Test, 6: Spike Test, 7: Rate of Change Test, 8: Flat-line Test, 9: Multi-variate Test, 10: Attenuated Signal Test, 11: Neighbor Test"
+attribute,battery_voltage_qc_tests,flag_meanings,String,PASS NOT_EVALUATED SUSPECT FAIL MISSING
+attribute,battery_voltage_qc_tests,flag_values,int,"1, 2, 3, 4, 9"
+attribute,battery_voltage_qc_tests,ioos_category,String,Other
+attribute,battery_voltage_qc_tests,long_name,String,Battery QARTOD Individual Tests
+attribute,battery_voltage_qc_tests,short_name,String,battery_voltage_qc_tests
+attribute,battery_voltage_qc_tests,standard_name,String,quality_flag
+attribute,battery_voltage_qc_tests,standard_name_url,String,https://mmisw.org/ont/cf/parameter/quality_flag
+variable,relative_humidity,,double,
+attribute,relative_humidity,_ChunkSizes,uint,511
+attribute,relative_humidity,_FillValue,double,-9999.0
+attribute,relative_humidity,actual_range,double,"-52.55, 122.5"
+attribute,relative_humidity,ancillary_variables,String,relative_humidity_qc_agg relative_humidity_qc_tests
+attribute,relative_humidity,id,String,1111807
+attribute,relative_humidity,ioos_category,String,Meteorology
+attribute,relative_humidity,long_name,String,Relative Humidity
+attribute,relative_humidity,missing_value,double,-9999.0
+attribute,relative_humidity,platform,String,station
+attribute,relative_humidity,short_name,String,relative_humidity
+attribute,relative_humidity,standard_name,String,relative_humidity
+attribute,relative_humidity,standard_name_url,String,https://mmisw.org/ont/cf/parameter/relative_humidity
+attribute,relative_humidity,units,String,%
+variable,relative_humidity_qc_agg,,int,
+attribute,relative_humidity_qc_agg,_ChunkSizes,uint,4087
+attribute,relative_humidity_qc_agg,_FillValue,int,-127
+attribute,relative_humidity_qc_agg,actual_range,int,"2, 2"
+attribute,relative_humidity_qc_agg,flag_meanings,String,PASS NOT_EVALUATED SUSPECT FAIL MISSING
+attribute,relative_humidity_qc_agg,flag_values,int,"1, 2, 3, 4, 9"
+attribute,relative_humidity_qc_agg,ioos_category,String,Other
+attribute,relative_humidity_qc_agg,long_name,String,Relative Humidity QARTOD Aggregate Quality Flag
+attribute,relative_humidity_qc_agg,missing_value,int,-127
+attribute,relative_humidity_qc_agg,short_name,String,relative_humidity_qc_agg
+attribute,relative_humidity_qc_agg,standard_name,String,aggregate_quality_flag
+attribute,relative_humidity_qc_agg,standard_name_url,String,https://mmisw.org/ont/cf/parameter/aggregate_quality_flag
+variable,relative_humidity_qc_tests,,ulong,
+attribute,relative_humidity_qc_tests,_ChunkSizes,uint,511
+attribute,relative_humidity_qc_tests,_FillValue,ulong,0
+attribute,relative_humidity_qc_tests,comment,String,"11-character string with results of individual QARTOD tests. 1: Gap Test, 2: Syntax Test, 3: Location Test, 4: Gross Range Test, 5: Climatology Test, 6: Spike Test, 7: Rate of Change Test, 8: Flat-line Test, 9: Multi-variate Test, 10: Attenuated Signal Test, 11: Neighbor Test"
+attribute,relative_humidity_qc_tests,flag_meanings,String,PASS NOT_EVALUATED SUSPECT FAIL MISSING
+attribute,relative_humidity_qc_tests,flag_values,int,"1, 2, 3, 4, 9"
+attribute,relative_humidity_qc_tests,ioos_category,String,Other
+attribute,relative_humidity_qc_tests,long_name,String,Relative Humidity QARTOD Individual Tests
+attribute,relative_humidity_qc_tests,short_name,String,relative_humidity_qc_tests
+attribute,relative_humidity_qc_tests,standard_name,String,quality_flag
+attribute,relative_humidity_qc_tests,standard_name_url,String,https://mmisw.org/ont/cf/parameter/quality_flag
+variable,lwe_thickness_of_precipitation_amount,,double,
+attribute,lwe_thickness_of_precipitation_amount,_ChunkSizes,uint,511
+attribute,lwe_thickness_of_precipitation_amount,_FillValue,double,-9999.0
+attribute,lwe_thickness_of_precipitation_amount,actual_range,double,"0.0, 820.42"
+attribute,lwe_thickness_of_precipitation_amount,ancillary_variables,String,lwe_thickness_of_precipitation_amount_qc_agg lwe_thickness_of_precipitation_amount_qc_tests
+attribute,lwe_thickness_of_precipitation_amount,id,String,1111800
+attribute,lwe_thickness_of_precipitation_amount,ioos_category,String,Meteorology
+attribute,lwe_thickness_of_precipitation_amount,long_name,String,Precipitation (accumulation)
+attribute,lwe_thickness_of_precipitation_amount,missing_value,double,-9999.0
+attribute,lwe_thickness_of_precipitation_amount,platform,String,station
+attribute,lwe_thickness_of_precipitation_amount,short_name,String,lwe_thickness_of_precipitation_amount
+attribute,lwe_thickness_of_precipitation_amount,standard_name,String,lwe_thickness_of_precipitation_amount
+attribute,lwe_thickness_of_precipitation_amount,standard_name_url,String,https://mmisw.org/ont/cf/parameter/lwe_thickness_of_precipitation_amount
+attribute,lwe_thickness_of_precipitation_amount,units,String,mm
+variable,lwe_thickness_of_precipitation_amount_qc_agg,,int,
+attribute,lwe_thickness_of_precipitation_amount_qc_agg,_ChunkSizes,uint,4087
+attribute,lwe_thickness_of_precipitation_amount_qc_agg,_FillValue,int,-127
+attribute,lwe_thickness_of_precipitation_amount_qc_agg,actual_range,int,"2, 2"
+attribute,lwe_thickness_of_precipitation_amount_qc_agg,flag_meanings,String,PASS NOT_EVALUATED SUSPECT FAIL MISSING
+attribute,lwe_thickness_of_precipitation_amount_qc_agg,flag_values,int,"1, 2, 3, 4, 9"
+attribute,lwe_thickness_of_precipitation_amount_qc_agg,ioos_category,String,Other
+attribute,lwe_thickness_of_precipitation_amount_qc_agg,long_name,String,Precipitation (accumulation) QARTOD Aggregate Quality Flag
+attribute,lwe_thickness_of_precipitation_amount_qc_agg,missing_value,int,-127
+attribute,lwe_thickness_of_precipitation_amount_qc_agg,short_name,String,lwe_thickness_of_precipitation_amount_qc_agg
+attribute,lwe_thickness_of_precipitation_amount_qc_agg,standard_name,String,aggregate_quality_flag
+attribute,lwe_thickness_of_precipitation_amount_qc_agg,standard_name_url,String,https://mmisw.org/ont/cf/parameter/aggregate_quality_flag
+variable,lwe_thickness_of_precipitation_amount_qc_tests,,ulong,
+attribute,lwe_thickness_of_precipitation_amount_qc_tests,_ChunkSizes,uint,511
+attribute,lwe_thickness_of_precipitation_amount_qc_tests,_FillValue,ulong,0
+attribute,lwe_thickness_of_precipitation_amount_qc_tests,comment,String,"11-character string with results of individual QARTOD tests. 1: Gap Test, 2: Syntax Test, 3: Location Test, 4: Gross Range Test, 5: Climatology Test, 6: Spike Test, 7: Rate of Change Test, 8: Flat-line Test, 9: Multi-variate Test, 10: Attenuated Signal Test, 11: Neighbor Test"
+attribute,lwe_thickness_of_precipitation_amount_qc_tests,flag_meanings,String,PASS NOT_EVALUATED SUSPECT FAIL MISSING
+attribute,lwe_thickness_of_precipitation_amount_qc_tests,flag_values,int,"1, 2, 3, 4, 9"
+attribute,lwe_thickness_of_precipitation_amount_qc_tests,ioos_category,String,Other
+attribute,lwe_thickness_of_precipitation_amount_qc_tests,long_name,String,Precipitation (accumulation) QARTOD Individual Tests
+attribute,lwe_thickness_of_precipitation_amount_qc_tests,short_name,String,lwe_thickness_of_precipitation_amount_qc_tests
+attribute,lwe_thickness_of_precipitation_amount_qc_tests,standard_name,String,quality_flag
+attribute,lwe_thickness_of_precipitation_amount_qc_tests,standard_name_url,String,https://mmisw.org/ont/cf/parameter/quality_flag
+variable,air_temperature,,double,
+attribute,air_temperature,_ChunkSizes,uint,512
+attribute,air_temperature,_FillValue,double,-9999.0
+attribute,air_temperature,actual_range,double,"-39.85, 36.833"
+attribute,air_temperature,ancillary_variables,String,air_temperature_qc_agg air_temperature_qc_tests
+attribute,air_temperature,id,String,1111806
+attribute,air_temperature,ioos_category,String,Temperature
+attribute,air_temperature,long_name,String,Air Temperature
+attribute,air_temperature,missing_value,double,-9999.0
+attribute,air_temperature,platform,String,station
+attribute,air_temperature,short_name,String,air_temperature
+attribute,air_temperature,standard_name,String,air_temperature
+attribute,air_temperature,standard_name_url,String,https://mmisw.org/ont/cf/parameter/air_temperature
+attribute,air_temperature,units,String,degree_Celsius
+variable,air_temperature_qc_agg,,int,
+attribute,air_temperature_qc_agg,_ChunkSizes,uint,4096
+attribute,air_temperature_qc_agg,_FillValue,int,-127
+attribute,air_temperature_qc_agg,actual_range,int,"2, 2"
+attribute,air_temperature_qc_agg,flag_meanings,String,PASS NOT_EVALUATED SUSPECT FAIL MISSING
+attribute,air_temperature_qc_agg,flag_values,int,"1, 2, 3, 4, 9"
+attribute,air_temperature_qc_agg,ioos_category,String,Other
+attribute,air_temperature_qc_agg,long_name,String,Air Temperature QARTOD Aggregate Quality Flag
+attribute,air_temperature_qc_agg,missing_value,int,-127
+attribute,air_temperature_qc_agg,short_name,String,air_temperature_qc_agg
+attribute,air_temperature_qc_agg,standard_name,String,aggregate_quality_flag
+attribute,air_temperature_qc_agg,standard_name_url,String,https://mmisw.org/ont/cf/parameter/aggregate_quality_flag
+variable,air_temperature_qc_tests,,ulong,
+attribute,air_temperature_qc_tests,_ChunkSizes,uint,511
+attribute,air_temperature_qc_tests,_FillValue,ulong,0
+attribute,air_temperature_qc_tests,comment,String,"11-character string with results of individual QARTOD tests. 1: Gap Test, 2: Syntax Test, 3: Location Test, 4: Gross Range Test, 5: Climatology Test, 6: Spike Test, 7: Rate of Change Test, 8: Flat-line Test, 9: Multi-variate Test, 10: Attenuated Signal Test, 11: Neighbor Test"
+attribute,air_temperature_qc_tests,flag_meanings,String,PASS NOT_EVALUATED SUSPECT FAIL MISSING
+attribute,air_temperature_qc_tests,flag_values,int,"1, 2, 3, 4, 9"
+attribute,air_temperature_qc_tests,ioos_category,String,Other
+attribute,air_temperature_qc_tests,long_name,String,Air Temperature QARTOD Individual Tests
+attribute,air_temperature_qc_tests,short_name,String,air_temperature_qc_tests
+attribute,air_temperature_qc_tests,standard_name,String,quality_flag
+attribute,air_temperature_qc_tests,standard_name_url,String,https://mmisw.org/ont/cf/parameter/quality_flag
+variable,station,,byte,
+attribute,station,cf_role,String,timeseries_id
+attribute,station,ioos_category,String,Identifier
+attribute,station,ioos_code,String,urn:ioos:station:us.ioos:gov_noaa_nws_hads_san_francisco_
+attribute,station,long_name,String,SAN FRANCISCO DOWNTOWN
+attribute,station,short_name,String,gov_noaa_nws_hads_san_francisco_
+attribute,station,type,String,fixed
