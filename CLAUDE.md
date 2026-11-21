@@ -29,7 +29,7 @@ d  = min( d_max, k*sqrt(max(0, z + h - T(t))) )         # drain term, T(t) = tid
 - Apply the drain term only at cells that contain a storm drain (`data/storm_drains.csv`).
 - Unknowns to fit: drain capacity `d_max` (start with one value per drainage basin), outlet constant `k`. Fix the runoff fraction from land cover, because it trades off against `d_max`.
 - The city says its sewers handle a 5-year storm, and the 5-year 3-hour storm makes about 1.14 inches of runoff. Use that as the starting `d_max`.
-- No public dataset of sewer pipes (sizes, slopes) was found. That is why pipe capacity is fitted.
+- A published research model of the bay-side trunk sewers is in `data/sewer_model_bayside.inp` (see the data table). Use it for the large pipes, outlets and pumps. Street-level pipes are still missing, so capacity between a street drain and the trunk pipes is still fitted.
 
 ## Testing against past floods
 
@@ -55,11 +55,13 @@ Largest days by 311 flooding reports: 2026-11-18 (778), 2022-12-31 (560), 2019-1
 | `rain_sf_downtown.csv` | Downtown San Francisco gauge, roughly hourly since May 2015. The rain column is a running total in millimeters. Difference it, and treat drops as gauge resets. |
 | `rain_gauge_SFO.csv`, `_OAK`, `_HAF` | Airport gauges, hourly, only hours with rain, inches, UTC. |
 | `rain_model_*.csv` | Open-Meteo weather-model reconstruction, hourly millimeters, GMT. Coarse. It smooths out short bursts. |
+| `sewer_model_bayside.inp` | Storm Water Management Model input file for the bay side (east side) combined sewers, from Bagheri, Giddings and Davani (2026), Water Resources Research, https://zenodo.org/records/23288563, Creative Commons Attribution 4.0 (credit the authors). 653 pipes (121 miles, median diameter 3 feet), 571 junctions with bottom heights, 32 outlets with an hourly tide boundary, 47 drainage areas, 11 pumps, 30 weirs, control rules. Lengths in feet, flow in cubic feet per second. Coordinates are web-mercator meters, the same projection as the map tiles. Trunk pipes only. The west side (Sunset, Richmond) is not covered. |
 | `storm_drains.csv` | City storm drain locations (about 23,900). |
 | `city_100yr_flood_zone.geojson` | City 100-year storm flood zone boundary. |
 | `dem/14/{x}/{y}.png` | Terrarium ground-height tiles covering the city at zoom 14, about 7.5 m per pixel. `dem/index.json` has the tile range. |
 
 Known gaps:
+- The city keeps a database of every sewer pipe with size, material and location (about 30,000 pipes and 30,000 manholes). It is not on the open data site. An artist obtained the tables from Public Works in 2014, so a public records request at sanfrancisco.nextrequest.com is worth filing.
 - The federal 15-minute rain gauge archive fetch failed (station list address was wrong). Short bursts matter for street flooding, so finer rain data is worth finding. The city utility runs neighborhood rain gauges, and that data has not been located.
 - Rain before May 2015 inside the city is only available from the airports and the weather model.
 
