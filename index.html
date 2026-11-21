@@ -706,10 +706,20 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .status { font-size:12px; color:#a33; min-height:0; }
   .legend { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); margin-top:8px; }
   .legend i { flex:1; height:8px; border-radius:4px; background:linear-gradient(90deg, rgba(90,170,255,.55), rgba(10,40,130,.85)); }
+  .fc { border-top:1px solid var(--line); margin-top:10px; padding-top:8px; }
+  .fc-head { font-size:12px; color:var(--muted); display:flex; justify-content:space-between; gap:8px; }
+  .fc canvas { width:100%; height:64px; display:block; margin-top:4px; }
+  .fc input[type=range] { margin:2px 0 2px; }
+  .fc-label { font-size:13px; font-variant-numeric:tabular-nums; min-height:19px; }
+  .fc-btns { display:flex; gap:6px; margin-top:6px; }
+  .fc-btns button { flex:1; border:1px solid var(--line); background:#fff; border-radius:8px; padding:7px 4px; font:inherit; font-size:13px; color:var(--ink); cursor:pointer; }
   .leaflet-control-layers { border-radius:10px !important; }
   @media (max-width:560px) {
     .panel { top:auto; bottom:calc(12px + env(safe-area-inset-bottom, 0px)); left:8px; width:calc(100% - 16px); }
     .leaflet-bottom { display:none; }
+    #slider, .legend { display:none; }
+    .panel { padding:10px 12px 8px; }
+    .search { margin-bottom:6px; }
   }
 </style>
 </head>
@@ -732,13 +742,25 @@ svg.leaflet-image-layer.leaflet-interactive path {
   </div>
   <input id="slider" type="range" aria-label="Water height slider">
   <div class="legend"><span>just under</span><i></i><span>3 m or more under</span></div>
+  <div class="fc">
+    <div class="fc-head"><span id="fcStation">Loading tide forecast…</span><span id="fcKey">tide line, rain bars</span></div>
+    <canvas id="fcChart"></canvas>
+    <input id="fcT" type="range" min="0" max="167" step="1" value="0" aria-label="Forecast time">
+    <div class="fc-label" id="fcLabel"></div>
+    <div class="fc-btns">
+      <button type="button" id="fcNow">Now</button>
+      <button type="button" id="fcPeak">Highest tide</button>
+      <button type="button" id="fcNear">Nearest station</button>
+    </div>
+  </div>
   <div class="readout" id="readout">Tap the map to read the ground height at a point.</div>
   <div class="status" id="status"></div>
   <details>
     <summary>Tide datum offset and notes</summary>
     <label for="off">Add to the height I enter (<span id="offUnit">feet</span>):</label>
     <input id="off" type="number" step="0.01" value="0">
-    <p>Tide tables measure from mean lower low water. The ground heights on this map are measured from the North American Vertical Datum of 1988 in the United States, and from mean sea level elsewhere. Put the gap between the two here. In San Francisco the gap is under an inch, so zero is fine. In other ports it can be several feet.</p>
+    <p>Tide tables measure from mean lower low water. The ground heights on this map are measured from the North American Vertical Datum of 1988 in the United States, and from mean sea level elsewhere. Put the gap between the two here. The page fills this in from the tide station when the station publishes both. In San Francisco the gap is under an inch. In other ports it can be several feet.</p>
+    <p>Tide heights come from the National Oceanic and Atmospheric Administration predictions for the station shown. Rain comes from the Open-Meteo forecast for the center of the map. Rain is shown on the chart only. It does not change the shading yet.</p>
     <p>The map shades every spot whose ground is at or below the water height. It does not know about levees, sea walls, storm drains or pumps, so low ground behind a levee shows as wet even if the levee would hold. Ground data is about 10 meters per pixel at best and can be off by a foot or more.</p>
   </details>
 </div>
@@ -891,14 +913,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
   hEl.addEventListener('input', function () {
     var v = parseFloat(hEl.value); if (isNaN(v)) return;
-    state.level = fromUnit(v); levelChanged('h');
+    state.level = fromUnit(v); fc.auto = false; levelChanged('h'); fcLabel();
   });
-  sl.addEventListener('input', function () { state.level = fromUnit(parseFloat(sl.value)); levelChanged('s'); });
+  sl.addEventListener('input', function () { state.level = fromUnit(parseFloat(sl.value)); fc.auto = false; levelChanged('s'); fcLabel(); });
   offEl.addEventListener('input', function () {
     var v = parseFloat(offEl.value); state.offset = isNaN(v) ? 0 : fromUnit(v); levelChanged('o');
   });
-  uFt.addEventListener('click', function () { state.unit = 'ft'; levelChanged(); });
-  uM.addEventListener('click', function () { state.unit = 'm'; levelChanged(); });
+  uFt.addEventListener('click', function () { state.unit = 'ft'; levelChanged(); fcLabel(); });
+  uM.addEventListener('click', function () { state.unit = 'm'; levelChanged(); fcLabel(); });
 
   map.on('click', function (e) {
     pinLatLng = e.latlng;
@@ -930,7 +952,155 @@ svg.leaflet-image-layer.leaflet-interactive path {
       .catch(function () { status.textContent = 'Search did not work. Enter latitude, longitude instead.'; });
   });
 
+  // ---- forecast: tide predictions and rain --------------------------------
+  var HOUR = 3600000;
+  var NOAA = qs.get('noaa') || 'https://api.tidesandcurrents.noaa.gov';
+  var METEO = qs.get('meteo') || 'https://api.open-meteo.com';
+  var fc = {
+    t0: Math.floor(Date.now() / HOUR) * HOUR, hours: 168, idx: 0, auto: true,
+    hilo: [], rain: null, station: { id: '9414290', name: 'San Francisco' }, stations: null
+  };
+  var fcT = document.getElementById('fcT'), fcStationEl = document.getElementById('fcStation');
+  var fcLabelEl = document.getElementById('fcLabel'), chart = document.getElementById('fcChart');
+
+  function getJSON(url) { return fetch(url).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }); }
+
+  function tideAt(ms) {               // meters above mean lower low water, cosine curve between highs and lows
+    var a = fc.hilo;
+    for (var i = 0; i < a.length - 1; i++) {
+      if (ms >= a[i].t && ms <= a[i + 1].t) {
+        var f = (ms - a[i].t) / (a[i + 1].t - a[i].t);
+        return a[i].v + (a[i + 1].v - a[i].v) * (1 - Math.cos(Math.PI * f)) / 2;
+      }
+    }
+    return null;
+  }
+
+  function fcLabel() {
+    var ms = fc.t0 + fc.idx * HOUR, v = tideAt(ms), ft = state.unit === 'ft';
+    if (!fc.auto) { fcLabelEl.textContent = 'Manual height. Move the time slider to return to the forecast.'; drawChart(); return; }
+    if (v === null) { fcLabelEl.textContent = ''; drawChart(); return; }
+    var when = new Date(ms).toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric' });
+    var txt = when + ' · tide ' + fmt(v);
+    if (fc.rain) {
+      var r = fc.rain[fc.idx] || 0;
+      txt += ' · rain ' + (ft ? (r / 25.4).toFixed(2) + ' in/hr' : r.toFixed(1) + ' mm/hr');
+    }
+    fcLabelEl.textContent = txt;
+    drawChart();
+  }
+
+  function setIdx(i) {
+    fc.idx = Math.max(0, Math.min(fc.hours - 1, i));
+    fcT.value = fc.idx;
+    var v = tideAt(fc.t0 + fc.idx * HOUR);
+    if (v !== null) { fc.auto = true; state.level = v; levelChanged(); }
+    fcLabel();
+  }
+
+  function peakIdx() {
+    var best = 0, bv = -1e9;
+    for (var i = 0; i < fc.hours; i++) { var v = tideAt(fc.t0 + i * HOUR); if (v !== null && v > bv) { bv = v; best = i; } }
+    return best;
+  }
+
+  function drawChart() {
+    var w = chart.clientWidth, hgt = chart.clientHeight; if (!w) return;
+    var dpr = window.devicePixelRatio || 1;
+    if (chart.width !== Math.round(w * dpr)) { chart.width = Math.round(w * dpr); chart.height = Math.round(hgt * dpr); }
+    var c = chart.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, w, hgt);
+    var n = fc.hours, x = function (i) { return i / (n - 1) * w; };
+    // day lines at local midnight
+    c.fillStyle = '#8b98a3'; c.font = '10px sans-serif'; c.strokeStyle = '#e3e8ec'; c.lineWidth = 1;
+    for (var i = 0; i < n; i++) {
+      var d = new Date(fc.t0 + i * HOUR);
+      if (d.getHours() === 0) {
+        c.beginPath(); c.moveTo(x(i), 0); c.lineTo(x(i), hgt); c.stroke();
+        c.fillText(d.toLocaleDateString([], { weekday: 'short' }), x(i) + 3, 10);
+      }
+    }
+    if (fc.rain) {
+      var rmax = 2; for (i = 0; i < n; i++) rmax = Math.max(rmax, fc.rain[i] || 0);
+      c.fillStyle = '#7d8a96';
+      for (i = 0; i < n; i++) { var r = fc.rain[i] || 0; if (r > 0) { var bh = r / rmax * (hgt - 14); c.fillRect(x(i) - 1, hgt - bh, Math.max(2, w / n), bh); } }
+    }
+    if (fc.hilo.length) {
+      var lo = 1e9, hi = -1e9, vals = [];
+      for (i = 0; i < n; i++) { var v = tideAt(fc.t0 + i * HOUR); vals.push(v); if (v !== null) { lo = Math.min(lo, v); hi = Math.max(hi, v); } }
+      c.strokeStyle = '#1668c7'; c.lineWidth = 1.6; c.beginPath(); var started = false;
+      for (i = 0; i < n; i++) {
+        if (vals[i] === null) continue;
+        var y = hgt - 3 - (vals[i] - lo) / (hi - lo || 1) * (hgt - 18);
+        if (started) c.lineTo(x(i), y); else { c.moveTo(x(i), y); started = true; }
+      }
+      c.stroke();
+    }
+    c.strokeStyle = fc.auto ? '#e2572b' : '#c3ccd3'; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(x(fc.idx), 0); c.lineTo(x(fc.idx), hgt); c.stroke();
+  }
+
+  function ymd(d) { return d.getUTCFullYear() + ('0' + (d.getUTCMonth() + 1)).slice(-2) + ('0' + d.getUTCDate()).slice(-2); }
+
+  function loadTides(jumpToPeak) {
+    var st = fc.station;
+    fcStationEl.textContent = 'Loading tide forecast…';
+    var url = NOAA + '/api/prod/datagetter?product=predictions&application=floodmap&begin_date=' + ymd(new Date(fc.t0 - 24 * HOUR)) +
+      '&range=240&datum=MLLW&station=' + st.id + '&time_zone=gmt&units=metric&interval=hilo&format=json';
+    getJSON(url).then(function (j) {
+      if (!j.predictions || !j.predictions.length) throw new Error('no predictions');
+      fc.hilo = j.predictions.map(function (p) {
+        var m = p.t.match(/(\d+)-(\d+)-(\d+) (\d+):(\d+)/);
+        return { t: Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]), v: parseFloat(p.v) };
+      }).sort(function (a, b) { return a.t - b.t; });
+      fcStationEl.textContent = 'Tide station: ' + st.name;
+      setIdx(jumpToPeak ? peakIdx() : fc.idx);
+    }).catch(function () {
+      fc.hilo = []; fcStationEl.textContent = 'Tide forecast did not load. Enter a height by hand.'; fcLabel();
+    });
+    // gap between the tide zero and the map's ground zero, when the station publishes both
+    getJSON(NOAA + '/mdapi/prod/webapi/stations/' + st.id + '/datums.json?units=metric').then(function (j) {
+      var d = {}; (j.datums || []).forEach(function (x) { d[x.name] = x.value; });
+      if (typeof d.MLLW === 'number' && typeof d.NAVD88 === 'number') { state.offset = d.MLLW - d.NAVD88; levelChanged(); }
+    }).catch(function () {});
+  }
+
+  function loadRain() {
+    var c = map.getCenter();
+    getJSON(METEO + '/v1/forecast?latitude=' + c.lat.toFixed(3) + '&longitude=' + c.lng.toFixed(3) +
+      '&hourly=precipitation&forecast_days=8&timeformat=unixtime&timezone=GMT').then(function (j) {
+      var byT = {}, t = j.hourly.time, p = j.hourly.precipitation;
+      for (var i = 0; i < t.length; i++) byT[t[i] * 1000] = p[i];
+      fc.rain = []; for (i = 0; i < fc.hours; i++) fc.rain.push(byT[fc.t0 + i * HOUR] || 0);
+      fcLabel();
+    }).catch(function () { fc.rain = null; fcLabel(); });
+  }
+
+  function nearestStation() {
+    var pick = function () {
+      var c = map.getCenter(), best = null, bd = 1e18;
+      fc.stations.forEach(function (s) {
+        if (typeof s.lat !== 'number' || typeof s.lng !== 'number') return;
+        var dy = s.lat - c.lat, dx = (s.lng - c.lng) * Math.cos(c.lat * Math.PI / 180), d = dx * dx + dy * dy;
+        if (d < bd) { bd = d; best = s; }
+      });
+      if (best) fc.station = { id: String(best.id), name: best.name };
+      loadTides(true); loadRain();
+    };
+    if (fc.stations) { pick(); return; }
+    fcStationEl.textContent = 'Finding the nearest tide station…';
+    getJSON(NOAA + '/mdapi/prod/webapi/stations.json?type=tidepredictions').then(function (j) {
+      fc.stations = j.stations || []; pick();
+    }).catch(function () { loadTides(true); loadRain(); });
+  }
+
+  fcT.addEventListener('input', function () { setIdx(parseInt(fcT.value, 10)); });
+  document.getElementById('fcNow').addEventListener('click', function () { setIdx(0); });
+  document.getElementById('fcPeak').addEventListener('click', function () { setIdx(peakIdx()); });
+  document.getElementById('fcNear').addEventListener('click', nearestStation);
+  window.addEventListener('resize', drawChart);
+
   syncInputs();
+  nearestStation();
 })();
 </script>
 </body>
