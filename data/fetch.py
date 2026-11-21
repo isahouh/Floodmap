@@ -215,6 +215,13 @@ def fetch_drains():
         get("https://data.sfgov.org/resource/jtgq-b7c5.csv?" + q, timeout=300))
 
 
+# ---------------------------------------------------------------- sewer pipe network (published research model)
+def fetch_sewer_model():
+    # Bagheri, Giddings and Davani (2026), Water Resources Research. Creative Commons Attribution 4.0.
+    b = get("https://zenodo.org/records/23288563/files/SF_Bayside_PCSWMM_baseline.inp?download=1", timeout=300)
+    open(os.path.join(HERE, "sewer_model_bayside.inp"), "wb").write(b)
+
+
 def have(*names):
     return all(os.path.exists(os.path.join(HERE, n)) for n in names)
 
@@ -233,8 +240,11 @@ if __name__ == "__main__":
         step("ground heights", fetch_dem)
     if full or not have("city_100yr_flood_zone.geojson"):
         step("city 100-year flood zone", fetch_flood_zone)
-    step("rain, San Francisco downtown gauge", fetch_rain_sf_downtown)
-    step("rain, 15-minute gauges", fetch_rain_15min)
-    step("storm drains", fetch_drains)
+    if full or not have("rain_sf_downtown.csv"):
+        step("rain, San Francisco downtown gauge", fetch_rain_sf_downtown)
+    if full or not have("storm_drains.csv"):
+        step("storm drains", fetch_drains)
+    if full or not have("sewer_model_bayside.inp"):
+        step("sewer pipe network", fetch_sewer_model)
     open(os.path.join(HERE, "fetch_log.txt"), "w").write(
         datetime.datetime.utcnow().isoformat() + "Z\n" + "\n".join(LOG) + "\n")
