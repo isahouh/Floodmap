@@ -1,0 +1,34 @@
+2026-11-21T16:44:12.584603Z
+  311 rows so far: 50000
+  311 rows so far: 100000
+  311 rows so far: 150000
+  311 rows so far: 171773
+OK   311 flooding cases
+  tide 2008: 8784 rows
+  tide 2009: 8760 rows
+  tide 2010: 8760 rows
+  tide 2011: 8760 rows
+  tide 2012: 8784 rows
+  tide 2013: 8760 rows
+  tide 2014: 8760 rows
+  tide 2015: 8760 rows
+  tide 2016: 8784 rows
+  tide 2017: 8760 rows
+  tide 2018: 8760 rows
+  tide 2019: 8760 rows
+  tide 2020: 8784 rows
+  tide 2021: 8760 rows
+  tide 2022: 8760 rows
+  tide 2023: 8760 rows
+  tide 2024: 8783 rows
+  tide 2025: 8760 rows
+  tide 2026: 7296 rows
+OK   tide gauge
+OK   rain, weather model
+  gauge SFO: 10510 rainy hours of 161144 reports
+  gauge OAK: 10827 rainy hours of 161000 reports
+  gauge HAF: 4523 rainy hours of 139328 reports
+OK   rain, airport gauges
+  ground height tiles: 81
+OK   ground heights
+OK   city 100-year flood zone
