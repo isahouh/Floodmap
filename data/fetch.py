@@ -165,12 +165,76 @@ def fetch_flood_zone():
     open(os.path.join(HERE, "city_100yr_flood_zone.geojson"), "wb").write(b)
 
 
+# ---------------------------------------------------------------- rain measured inside San Francisco
+def fetch_rain_sf_downtown():
+    # the downtown San Francisco gauge, as relayed by the regional ocean observing data server
+    base = "https://erddap.cencoos.org/erddap/tabledap/gov_noaa_nws_hads_san_francisco_"
+    open(os.path.join(HERE, "rain_sf_downtown_info.csv"), "wb").write(
+        get("https://erddap.cencoos.org/erddap/info/gov_noaa_nws_hads_san_francisco_/index.csv"))
+    open(os.path.join(HERE, "rain_sf_downtown.csv"), "wb").write(get(base + ".csv", timeout=900))
+
+
+def fetch_rain_15min():
+    # federal archive of 15-minute rain gauges: keep any gauge inside or next to the city
+    root = "https://www.ncei.noaa.gov/pub/data/hpd/auto/v2/beta/"
+    inv = None
+    for name in ["hpd-stations-inventory.csv", "15min/hpd-stations-inventory.csv", "hpd-stations.txt"]:
+        try:
+            inv = get(root + name).decode("utf-8", "replace")
+            log("  station list: " + name)
+            break
+        except Exception as e:  # noqa
+            log("  station list %s failed: %r" % (name, e))
+    if inv is None:
+        raise RuntimeError("no station list")
+    open(os.path.join(HERE, "rain_15min_station_list.csv"), "w").write(
+        "\n".join(ln for i, ln in enumerate(inv.splitlines()) if i == 0 or ",CA," in ln or " CA " in ln) + "\n")
+    found = 0
+    for row in csv.reader(io.StringIO(inv)):
+        try:
+            sid, la, lo = row[0], float(row[1]), float(row[2])
+        except Exception:
+            continue
+        if 37.60 <= la <= 37.95 and -122.60 <= lo <= -122.15:
+            for path in ["15min/all/%s.15m.csv" % sid, "all/%s.15m.csv" % sid]:
+                try:
+                    raw = get(root + path, timeout=300, tries=2)
+                    open(os.path.join(HERE, "rain_15min_%s.csv" % sid), "wb").write(raw)
+                    log("  15-minute gauge %s (%s): %d bytes" % (sid, row[5] if len(row) > 5 else "", len(raw)))
+                    found += 1
+                    break
+                except Exception as e:  # noqa
+                    log("  15-minute gauge %s at %s failed: %r" % (sid, path, e))
+    log("  15-minute gauges saved: %d" % found)
+
+
+# ---------------------------------------------------------------- storm drains
+def fetch_drains():
+    q = urllib.parse.urlencode({"$limit": 100000})
+    open(os.path.join(HERE, "storm_drains.csv"), "wb").write(
+        get("https://data.sfgov.org/resource/jtgq-b7c5.csv?" + q, timeout=300))
+
+
+def have(*names):
+    return all(os.path.exists(os.path.join(HERE, n)) for n in names)
+
+
 if __name__ == "__main__":
-    step("311 flooding cases", fetch_311)
-    step("tide gauge", fetch_tide)
-    step("rain, weather model", fetch_rain_model)
-    step("rain, airport gauges", fetch_rain_gauges)
-    step("ground heights", fetch_dem)
-    step("city 100-year flood zone", fetch_flood_zone)
+    full = "--all" in sys.argv
+    if full or not have("311_flooding.csv"):
+        step("311 flooding cases", fetch_311)
+    if full or not have("tide_hourly_9414290.csv"):
+        step("tide gauge", fetch_tide)
+    if full or not have("rain_model_downtown.csv"):
+        step("rain, weather model", fetch_rain_model)
+    if full or not have("rain_gauge_SFO.csv"):
+        step("rain, airport gauges", fetch_rain_gauges)
+    if full or not have("dem/index.json"):
+        step("ground heights", fetch_dem)
+    if full or not have("city_100yr_flood_zone.geojson"):
+        step("city 100-year flood zone", fetch_flood_zone)
+    step("rain, San Francisco downtown gauge", fetch_rain_sf_downtown)
+    step("rain, 15-minute gauges", fetch_rain_15min)
+    step("storm drains", fetch_drains)
     open(os.path.join(HERE, "fetch_log.txt"), "w").write(
         datetime.datetime.utcnow().isoformat() + "Z\n" + "\n".join(LOG) + "\n")
